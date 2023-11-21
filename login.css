@@ -1,0 +1,109 @@
+@import url(https://fonts.googleapis.com/css?family=Tangerine);
+@import url(https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@1,100&display=swap);
+.main-container {
+    width: 100%;
+    min-height: 120vh;
+    background-image: linear-gradient(to right, #e4afe3 0, #b8c5cb 0, #c1b8cb 0, #8bc3e2 30%, #ce9cc3 64%, #e66d9d 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -80px
+}
+
+.inner-container-join {
+    height: 600px;
+    width: 450px;
+    background-color: rgba(0, 0, 0, .308);
+    border-radius: 17px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+.app-name {  
+    font-family: 'Tangerine', serif;
+    font-size: 52px;
+    text-shadow: 4px 4px 4px #aaa;
+}
+
+h3 {
+    display: block;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    font-weight: 700
+}
+
+.app-label {
+    font-family: 'IBM Plex Sans', sans-serif;;
+    font-size: 1.8rem;
+    color: #fff
+}
+
+.h-line {
+    width: 90%;
+    border-bottom: 3px solid #fff
+}
+
+.joining-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+.join-btn {
+    margin-top: 5px
+}
+
+.joining-form input {
+    margin: 8px 0;
+    background-color: transparent;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1.1rem;
+    border: none;
+    border-bottom: 2px solid #fff;
+    padding: 5px 10px;
+    width: 36%;
+    outline: 0;
+    text-align: center
+}
+
+.joining-form input::placeholder {
+    color: rgba(245, 245, 245, .699)
+}
+
+.joining-form input:focus {
+    border-bottom: 2px solid #147980
+}
+
+.send-btn {
+    background-color: #28856f;
+    border: none;
+    font-size: 1.1rem;
+    color: #fff;
+    padding: 1px 13px;
+    margin: 0 6px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif;
+    outline: 0
+}
+
+h2 {
+    margin: 0;
+    padding: 0 0 30px;
+    color: #efed40;
+    text-align: center
+}
+
+::placeholder {
+    color: rgba(255, 255, 255, .5);
+    text-align: center
+}
+
+input {
+    margin-left: 10%
+}

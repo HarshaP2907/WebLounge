@@ -1,0 +1,676 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/20559aec7b.js" crossorigin="anonymous"></script>
+    <title>WEB LOUNGE &nbsp;💬</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://use.fontawesome.com/0924484589.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@3.0.0/dist/index.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.0.0/jsencrypt.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/forge/0.10.0/forge.min.js"></script>
+
+    <script src="..\public\index.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Langar&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@1,100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap" rel="stylesheet">
+
+
+    <style>
+        body {
+            /* margin: 3px; */
+            /* background-color: #00e676; */
+            --accent-color: #000000;
+            --background-color: white;
+            --chat-background: rgb(251, 251, 251);
+            --second-color: #effaf3;
+            --border-color: #e4e4e4;
+            --text-color: rgba(157, 209, 208, 0.271);
+            --transition-delay: 1s;
+            background-color: var(--background-color);
+            height: 100vh;
+            transition: var(--transition-delay);
+            background-color: #278EA5;
+        }
+        
+        #loginname {
+            display: none;
+        }
+        
+        body:before {
+            content: '';
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            /* -webkit-filter: blur(10px);
+            -moz-filter: blur(10px);
+            -o-filter: blur(10px);
+            -ms-filter: blur(10px);
+            filter: blur(10px); */
+            background-color: #278EA5;
+        }
+        
+        #messageArea {
+            display: none;
+            background-image: url("4.jpeg");
+            border: 2px dashed;
+            border-radius: 20;
+            padding: 20px;
+            margin: 12%;
+        }
+        /* #userform {
+            color: white;
+            border: 2px dotted black;
+            margin: 12%;
+            margin-left: 280px;
+            padding: 20px;
+            position: absolute;
+            width: 600px;
+            height: 380px;
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.5);
+        } */
+        
+        .btn-primary {
+            color: white;
+            text-align: center;
+            background-color: #00d1b2;
+            cursor: pointer;
+            border-radius: 25px;
+            border: none;
+            outline: none;
+            width: 22%;
+            padding: 6px 12px;
+            padding-left: 1px;
+        }
+        
+        .form-control {
+            width: 100%;
+            margin-bottom: 20px;
+            border: none;
+            border-bottom: 1px solid #fff;
+            background: transparent;
+            outline: none;
+            height: 40px;
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        #h2 {
+            font-family: arial;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+        }
+        
+        #messageform {
+            color: black;
+        }
+        
+        ul li::before {
+            color: rgb(59, 27, 83);
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .chat {
+            height: 300px;
+            overflow: auto;
+        }
+        
+        body {
+            --accent-color: #239dc5;
+            --background-color: white;
+            --chat-background: rgb(251, 251, 251);
+            --second-color: #effaf3;
+            --border-color: #e4e4e4;
+            --text-color: black;
+            --transition-delay: 1s;
+            background-color: var(--background-color);
+            height: 100vh;
+            transition: var(--transition-delay);
+        }
+        
+        body.dark {
+            --accent-color: #e721dd;
+            --background-color: #333;
+            --navbar-background: #333;
+            --chat-background: rgb(58, 58, 58);
+            --second-color: #1396a5;
+            --border-color: rgb(92, 91, 91);
+            --text-color: white;
+        }
+        
+        #h1-title {
+            font-size: 200%;
+        }
+        
+        #chat {
+            font-size: 108%;
+            max-width: 580px;
+            height: 270px;
+            margin: 20px auto;
+            /* border: 1px solid #53c070; */
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+            background: var(--chat-background);
+            border: 1px solid #e3e3e3;
+            border-radius: 4px;
+        }
+        
+        #chat-window {
+            height: 430px;
+            word-wrap: break-word;
+            overflow: auto;
+            min-height: 100%;
+            box-shadow: 10px 15px 20px rgba(0, 0, 0, 0.1);
+            background: var(--chat-background);
+        }
+        
+        #users-counter {
+            font-size: 18px;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: var(--second-color);
+            color: var(--text-color);
+        }
+        
+        #you-joined {
+            padding: 10px 0px;
+            margin: 0 18px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        #display-message p {
+            padding: 10px 0px;
+            margin: 0 18px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+        
+        #display-message strong {
+            color: var(--accent-color);
+        }
+        
+        #typing-label p {
+            color: #aaa;
+            padding: 14px 0px;
+            margin: 0 20px;
+            text-decoration: underline;
+        }
+        
+        #message-error,
+        #username-error {
+            color: red;
+        }
+        
+        #username-error {
+            font-size: 130%;
+        }
+        
+        #username-input {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        
+        #message-input {
+            flex: 1;
+            width: 100%;
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+            background: var(--chat-background);
+            color: var(--text-color);
+        }
+        
+        #message-box {
+            display: flex;
+        }
+        
+        #emoji-button {
+            height: 40px;
+            width: 40px;
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+            background: var(--second-color);
+        }
+        
+        #send-message {
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.23);
+        }
+        
+        #login-page {
+            margin-top: 200px;
+            text-align: center;
+        }
+        
+        #login-label {
+            color: var(--text-color);
+        }
+        
+        #login-form {
+            width: 40%;
+        }
+        
+        #gh-button {
+            margin-left: 6px;
+        }
+        
+        .onoffswitch {
+            margin-left: 10px;
+            position: relative;
+            width: 100px;
+            /* -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none; */
+        }
+        
+        .onoffswitch-checkbox {
+            display: none;
+        }
+        
+        .onoffswitch-label {
+            display: block;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        
+        .onoffswitch-inner {
+            display: block;
+            width: 200%;
+            margin-left: -100%;
+            transition: margin 0.3s ease-in 0s;
+        }
+        
+        .onoffswitch-inner:before,
+        .onoffswitch-inner:after {
+            display: block;
+            float: left;
+            width: 50%;
+            height: 36px;
+            padding: 0;
+            line-height: 36px;
+            font-size: 18px;
+            color: #fff;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+        
+        .onoffswitch-inner:before {
+            content: "ON";
+            padding-left: 10px;
+            background-color: #4ac7e4;
+            color: #fff;
+        }
+        
+        .onoffswitch-inner:after {
+            content: "OFF";
+            padding-right: 10px;
+            background-color: #ED2323;
+            color: #fff;
+            text-align: right;
+        }
+        
+        .onoffswitch-switch {
+            display: block;
+            width: 21px;
+            margin: 7.5px;
+            background: #fff;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 57px;
+            border-radius: 14px;
+            transition: all 0.3s ease-in 0s;
+        }
+        
+        .onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-inner {
+            margin-left: 0;
+        }
+        
+        .onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-switch {
+            right: 0px;
+        }
+        
+        #sound-p {
+            font-size: 24px;
+        }
+        
+        #theme-button {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        
+        #theme-button,
+        #gh-button {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-size: 18px;
+        }
+        
+        #message-icon,
+        #user-icon {
+            color: var(--text-color);
+        }
+        
+        @media only screen and (max-width: 1000px) {
+            #chat {
+                margin: 1px auto;
+                height: 440px;
+            }
+            #login-form {
+                width: 100%;
+            }
+            #login-page {
+                margin-top: 35%;
+            }
+            #login-label {
+                display: inline-block;
+            }
+            #gh-button,
+            #theme-button {
+                width: 100%;
+                border: 1px solid #fff;
+            }
+            #onoffswitch {
+                width: 70%;
+                margin-bottom: 10px;
+            }
+            #sound-p {
+                margin-left: 15px;
+                color: #fff;
+            }
+            #navbarBasicExample {
+                background-color: var(--navbar-background);
+            }
+            #logo-img {
+                width: 80px;
+                height: 80px;
+            }
+            #h1-title {
+                font-size: 27px;
+            }
+        }
+        
+        nav.navbar.is-success {
+            height: 128px;
+        }
+        /* .well {
+            z-index: 12;
+            margin-top: -453px;
+            margin-left: -180px;
+            width: 52%;
+        }
+         */
+        
+        .col-md-8 {
+            z-index: 10;
+            margin-top: -450px;
+            margin-left: 155px;
+            border: 2px solid #e3e3e3;
+            border-radius: 15px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar is-success" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <h1 class="navbar-item" id="h1-title" style="font-family: 'Rubik Bubbles', cursive; font-size: 60px; font-weight: 'bold'; margin-top: 38px;">WEB&nbspLOUNGE</h1>
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <!-- <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <p class="buttons">
+                                <p id="sound-p"><i class="fa fa-volume-up fa-2x" aria-hidden="true"></i></p>
+                                <div class="onoffswitch" id="onoffswitch">
+                                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="sound-control" checked>
+                                    <label class="onoffswitch-label" for="sound-control">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                        </label>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a id="gh-button" class="button" target="_blank" style="text-decoration: none;">
+                                    <span class="icon">
+                                    <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                                    </span>
+                                    <span><strong>SECURE</strong></span>
+                                </a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </nav>
+    </header>
+
+    <main>
+        <section id="login-page" class="section">
+            <div id="login-form" class="container">
+                <div id="loginname"> </div>
+                <div id="userFormArea" class="row">
+                    <form id="userForm">
+                        <h1 class="title" style="color: #fff;font-family:'IBM Plex Sans', sans-serif; font-size: 38px;">Enter your Name</h1>
+                        <div class="control has-icons-left">
+                            <input type="text" id="username" placeholder="Name" class="input is-success is-medium is-fullwidth" type="text" name="username" maxlength=20 autofocus/>
+                            <script>
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const userParam = urlParams.get('user');
+                                if (userParam) {
+                                    document.getElementById('username').value = userParam;
+                                }
+                            </script>
+                            <span class="icon is-left">
+           <i class="fa fa-user" id="user-icon"></i>
+         </span>
+                            <span id="username-error"></span>
+                        </div>
+
+                        <input type="submit" class="button is-primary is-medium is-fullwidth" value="Proceed">
+
+                    </form>
+                </div>
+            </div>
+            </div>
+        </section>
+    </main>
+
+
+    <div id="messageArea" class="row" style="background-color: #0d1418;">
+        <div class="col-md-4">
+
+        </div>
+
+        <div class="col-md-8">
+
+            <div class="chat" id="chat"></div>
+
+            <form id="messageForm">
+                <div class="form-group">
+                    <label style="color: #fff;">Enter Message</label>
+                    <textarea class="form-control" id="message" style="color: black; background-color: rgb(251, 251, 251);"></textarea>
+                    <br />
+                    <center>
+                        <input style="font-family: 'IBM Plex Sans', sans-serif; font-size: 18px; font-weight: 800; color: #0e0007;" type="submit" class="btn btn-primary" value="&nbsp;&nbsp;Send" />
+                    </center>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    </div>
+
+    <audio id="audioFile">
+        <source src="https://audio.jukehost.co.uk/V7sDDIaLWYS6xcIOVpBazHJSKU0XE4gZ.mp3" type="audio/mpeg">
+      </audio>
+
+
+
+    <script>
+        function submitOnEnter(event) {
+            if (event.which === 13 && !event.shiftKey) {
+                event.target.form.dispatchEvent(new Event("submit", {
+                    cancelable: true
+                }));
+                event.preventDefault(); // Prevents the addition of a new line in the text field (not needed in a lot of cases)
+            }
+        }
+
+        document.getElementById("message").addEventListener("keypress", submitOnEnter);
+
+        document.getElementById("messageForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            console.log("Message Sent");
+        });
+    </script>
+
+    <script>
+        var enbtn = document.getElementById("encrbtn");
+        var rawdata = document.getElementById("message");
+        var password = document.getElementById("code");
+        var display1 = document.getElementById("display1");
+        var endata = document.getElementById("endata");
+        var password2 = document.getElementById("password2");
+        var display2 = document.getElementById("display2");
+        var debtn = document.getElementById("debtn");
+    </script>
+
+    <script type="text/javascript">
+        const imp = () => {
+            document.getElementById('loginname').innerHTML =
+                document.getElementById("username").value;
+        }
+        setInterval(imp(), 300);
+    </script>
+
+
+    <script>
+        $(function() {
+            var socket = io.connect();
+            var $messageForm = $('#messageForm');
+            var message = $('#message').val();
+            console.log(message);
+            var $chat = $('#chat');
+            var $messageArea = $('#messageArea');
+            var $loginname = $('#loginname');
+            var $userFormArea = $('#userFormArea');
+            var $userForm = $('#userForm');
+            var $users = $('#users');
+            var $username = $('#username');
+
+            const senderKey = new JSEncrypt();
+            senderKey.getKey();
+            const senderPublicKey = senderKey.getPublicKey();
+            const senderPrivateKey = senderKey.getPrivateKey();
+
+
+            socket.emit('clientPublicKey', senderPublicKey)
+
+            socket.on("serverPublicKey", function(data) {                
+                var rsaPubKey = data;
+                console.log("RSA PUB KEY", rsaPubKey)
+                var key_128 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+                var key_192 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+                            16, 17, 18, 19, 20, 21, 22, 23];
+                var key_256 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+                            16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28,
+                            29, 30, 31];
+                // var key_128_buffer = Buffer.from(key_128);
+                // var key_192_buffer = Buffer.from(key_192);
+                // var key_256_buffer = Buffer.from(key_256);
+                var aesKey = CryptoJS.lib.WordArray.random(16); // 128-bit key (16 bytes)
+                // var aesKeyBytes = aesKey.toString(CryptoJS.enc.Base64);
+                var aesKeyBytes = "ZthKmHBQa7gziXxKighnkw=="
+                // var aesKeyBytes = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqDBIqVyDQJ3q0LvfmoyYIIe1ba+BFB0bfErfTWeS+s+2KAsyP4dOLEeWg+zSbUXioHNbp8LXMGylYf6LA6zwLdgbCgvBYpJ/ZxXcaZu64waMYufAeuLt5LpBLpFNJKbp/GvYg48CqlYSucMMTpwjqHciFvVRSMnI7AS3r3zV9CQIDAQAB';
+                console.log("AES KEY BYTES", aesKeyBytes);
+                var rsa = new JSEncrypt();
+                rsa.setPublicKey(rsaPubKey);
+                var encryptedAesKey = rsa.encrypt(aesKeyBytes);
+                console.log("ENCRYPTED AES KEY", encryptedAesKey.length)
+
+                console.log("AES KEY" , aesKey)
+                $messageForm.submit(function(e) {
+                    e.preventDefault();
+                    // var public = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqDBIqVyDQJ3q0LvfmoyYIIe1ba+BFB0bfErfTWeS+s+2KAsyP4dOLEeWg+zSbUXioHNbp8LXMGylYf6LA6zwLdgbCgvBYpJ/ZxXcaZu64waMYufAeuLt5LpBLpFNJKbp/GvYg48CqlYSucMMTpwjqHciFvVRSMnI7AS3r3zV9CQIDAQAB';
+                    console.log(rawdata.value);
+                    var msg = CryptoJS.AES.encrypt(rawdata.value, aesKeyBytes).toString();
+                    console.log("ENCRYPTED MSG", msg)
+                    var audio = document.getElementById('audioFile');
+                    console.log(msg);
+                    audio.play();
+                    socket.emit('send message', { msg: msg, aesKey: encryptedAesKey });
+                    $('#message').val('');
+                });
+            });
+
+            socket.on('new message', function(data) {
+                const recipientKey = new JSEncrypt();
+                recipientKey.setPrivateKey(senderPrivateKey);
+
+                const decryptedKey = recipientKey.decrypt(data.aesKey);
+
+                console.log("DECRYPTED KEY", decryptedKey)
+
+                console.log("DATA", data)
+                //1024 bits
+                var public = 'ZthKmHBQa7gziXxKighnkw=='
+                // var public = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqDBIqVyDQJ3q0LvfmoyYIIe1ba+BFB0bfErfTWeS+s+2KAsyP4dOLEeWg+zSbUXioHNbp8LXMGylYf6LA6zwLdgbCgvBYpJ/ZxXcaZu64waMYufAeuLt5LpBLpFNJKbp/GvYg48CqlYSucMMTpwjqHciFvVRSMnI7AS3r3zV9CQIDAQAB';
+                //var private="MIICXAIBAAKBgHrnm0yAicoPIYMAKliGvQ5qRGQIBHR2b18B9PeEPRpThT62fBffb0jguVCwnKKJG7CxupM7QKp9lHrfL2lp0C5o0coATSqVlvJMvxCHuPQbdmXXWSTpAWKEZa+Gr+/iO267hHSNJxe6uQZqkDZGcjVX24/V7i48qyNB/pTUjKkZAgMBAAECgYA+m0xYpAGMlDiV6rencLtNZISCEDN0v//rfauzigE2L+VoFL0RzBd8ID1GBTFE+mLIl0BbT4uZTW8dSCN2pxgMUeR17P6Mdd7eHNljK+O6zHvH+Rh96Oh134GVNmzefQ7yaVcm+knsLKk548jPuid0fAtaTGeEWfxbbqidH1E0gQJBAOKBjGHEqK3CLBS+1sglMv1rDRA4wjgmR77Ik988wPcg1wWwIX7p0QUdisAVlOF0emvyQV8PdCr773dZjPg9m10CQQCK6JDqwMBSnD5OpERCcC7tKW8SFrNKLIVkkTtezKaHnn4A95isUrKwx+jDbSsoFIAQKyTvN+tRqeKLnEpcaeTtAkEAofHv9eMOmxVOQRLlK7p1B31nnKaILm8oMr7kAuNEMCz5r6ZrfHseJ+MkVgvYI44NDWrq1FWPQEBayWFsifw6PQJADzuv4L6gmK6fupoTDkIlM0bu8knhAYpeWof+vcetn4PHB64fZQ5woChcI0pOiEevP5arpzw3py39NRg/o2DNhQJBALg0H/PjAtzXx1v/5PwOxM6Wd8IQBrCTsSYpl9PJ5X7dfnCX8/fmyPMQc9Ldu/8OxJ2at6GT8qRl7vBzllJhPJI=";
+                console.log(data.msg);
+                console.log("DECRYPTED MESSAGE", CryptoJS.AES.decrypt(data.msg, public).toString(CryptoJS.enc.Utf8));
+                //$chat.append('<div class="well"><strong>'+data.user+'</strong>: '+data.msg+'</div>');
+                $chat.append('<div class="well"><strong>' + data.user + '</strong>: ' + CryptoJS.AES.decrypt(data.msg, public).toString(CryptoJS.enc.Utf8) + '</div>');
+            });
+
+            $userForm.submit(function(e) {
+                e.preventDefault();
+                socket.emit('new user', $username.val(), function(data) {
+                    if (data) {
+                        $userFormArea.hide();
+                        $messageArea.show();
+                        $loginname.show();
+                    }
+                });
+                $username.val('');
+
+            });
+
+            socket.on('get users', function(data) {
+                var html = '';
+                for (i = 0; i < data.length; i++) {
+                    html += '<li class="list-group">' + data[i] + '</li>';
+                }
+                $users.html(html);
+            })
+        });
+    </script>
+</body>
+
+</html>
